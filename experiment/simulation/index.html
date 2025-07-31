@@ -1,13 +1,328 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<!-- Add CSS at the head of HTML file -->
-    <link rel="stylesheet" href="./css/main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Planarity of Graphs - Discrete Mathematics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="mobile-detection.js"></script>
 </head>
-<body>
-		<!-- Your code goes here-->
+<body class="bg-gray-50 text-gray-800">
 
-	<!-- Add JS at the bottom of HTML file --> 
-        <script src="./js/main.js"></script>
+  <div class="max-w-7xl mx-auto px-4 pb-16 space-y-8">
+
+    <section id="challenge-section" class="bg-white p-6 rounded-xl shadow-lg mb-6">
+      <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div class="flex-1">
+          <h3 class="font-semibold text-blue-800 mb-3">Planar Graph Explorer</h3>
+          <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <select id="graphSelect" class="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <option value="">Select a graph to explore</option>
+              <option value="K4">Complete Graph K₄</option>
+              <option value="K5">Complete Graph K₅</option>
+              <option value="K33">Complete Bipartite K₃,₃</option>
+              <option value="cube">Cube Graph</option>
+              <option value="random">Random Graph</option>
+            </select>
+            <button onclick="checkPlanarity()" class="btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm" id="checkBtn" disabled>
+              Check Planarity
+            </button>
+            <button onclick="showHint()" class="btn bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm hidden" id="hintBtn" disabled>
+              Get Hint
+            </button>
+            <button onclick="showSolution()" class="btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm hidden" id="solutionBtn" disabled>
+              Show Solution
+            </button>
+          </div>
+          <p id="modeQuestion" class="text-gray-600 mt-2 text-sm">
+            Select a graph to start exploring planarity!
+          </p>
+        </div>
+        <div class="btn-group">
+          <button onclick="generateNewGraph()" class="btn bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">
+            New Random Graph
+          </button>
+          <button onclick="resetGraph()" class="btn bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm">
+            Reset Positions
+          </button>
+        </div>
+      </div>
+      <div id="feedback" class="mt-3 p-2 rounded hidden"></div>
+      
+      <!-- Crossing Detection -->
+      <div id="crossingInfo" class="mt-3 hidden">
+        <div class="flex items-center justify-between text-sm text-gray-600 mb-1">
+          <span>Edge Crossings</span>
+          <span id="crossingCount" class="font-semibold text-red-600">0 crossings</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div id="crossingBar" class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="game-section" class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="flex flex-col lg:flex-row h-[600px] lg:h-[700px]">
+        <!-- Left side: Canvas -->
+        <div class="flex-1 p-4">
+          <div class="game-container h-full">
+            <canvas id="graphCanvas" class="w-full h-full"></canvas>
+          </div>
+        </div>
+        
+        <!-- Right side: Learning Panel -->
+        <div class="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-gray-200 bg-slate-50">
+          <div class="p-4 h-full flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-semibold text-slate-800">Learning Guide</h4>
+              <button onclick="clearLearningTrace()" class="text-xs text-slate-500 hover:text-slate-700 px-2 py-1 rounded border border-slate-300 hover:bg-white transition-colors">
+                Clear
+              </button>
+            </div>
+            <div id="learningTrace" class="flex-1 overflow-hidden">
+              <div id="traceContent" class="h-full overflow-y-auto space-y-2 pr-2">
+                <div class="text-sm text-slate-500 italic text-center py-8">
+                  Select a graph and start exploring to see learning insights here!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Success Overlay -->
+    <div id="successOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300" style="opacity: 0;">
+      <div class="bg-white rounded-2xl p-8 max-w-lg mx-4 text-center shadow-2xl transform transition-all duration-300 scale-95">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-2xl font-bold text-green-600 mb-3">Excellent Work!</h2>
+        <div class="text-gray-700 mb-6" id="successMessage">
+          You've successfully drawn the graph without edge crossings!
+        </div>
+        <div class="space-y-3">
+          <button onclick="tryAnotherGraph()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors transform hover:scale-105">
+            Try Another Graph
+          </button>
+          <button onclick="generateNewGraph(); hideSuccessOverlay();" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors transform hover:scale-105">
+            Generate Random Graph
+          </button>
+          <button onclick="hideSuccessOverlay()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Non-Planar Explanation Overlay -->
+    <div id="nonPlanarOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300" style="opacity: 0;">
+      <div class="bg-white rounded-2xl p-8 max-w-2xl mx-4 shadow-2xl transform transition-all duration-300">
+        <div class="text-center mb-6">
+          <div class="text-5xl mb-4">⚠️</div>
+          <h2 id="nonPlanarTitle" class="text-2xl font-bold text-red-600 mb-3">Graph is Non-Planar</h2>
+          <p id="nonPlanarExplanation" class="text-gray-700 mb-4">
+            This graph cannot be drawn without edge crossings.
+          </p>
+        </div>
+        
+        <div class="bg-red-50 p-4 rounded-lg mb-6">
+          <div id="nonPlanarReason" class="text-sm text-red-800">
+            <!-- Reason content will be populated by JavaScript -->
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <button onclick="hideNonPlanarOverlay()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors transform hover:scale-105">
+            Understood
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Solution Panel -->
+    <div id="solutionPanel" class="fixed top-4 right-4 bg-white rounded-xl shadow-2xl border border-gray-200 p-6 max-w-md z-40 hidden">
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-lg font-semibold text-blue-800">Solution Guide</h3>
+          <button onclick="exitSolutionMode()" class="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div id="solutionStepNumber" class="text-sm text-gray-600 font-medium">Step 1 of 3</div>
+      </div>
+      
+      <div class="mb-4">
+        <h4 id="solutionStepTitle" class="font-semibold text-gray-800 mb-2">Initial Layout</h4>
+        <p id="solutionStepDescription" class="text-sm text-gray-600 mb-3">Description goes here...</p>
+        <div class="bg-blue-50 p-3 rounded-lg">
+          <p id="solutionStepMessage" class="text-sm text-blue-800">Step message goes here...</p>
+        </div>
+      </div>
+      
+      <div class="flex gap-2">
+        <button id="prevStepBtn" onclick="previousSolutionStep()" class="px-4 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed" disabled>
+          Previous
+        </button>
+        <button id="nextStepBtn" onclick="nextSolutionStep()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Controls Button -->
+    <div class="floating-button primary" id="controlsButton">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+      </svg>
+    </div>
+    
+    <!-- Floating Controls Panel -->
+    <div class="floating-panel" id="controlsPanel">
+      <div class="floating-panel-header">
+        <h3 class="panel-title">Graph Parameters</h3>
+        <div class="floating-panel-close" id="controlsPanelClose">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </div>
+      </div>
+      <div class="floating-panel-content space-y-4">
+        <div class="bg-indigo-50 p-3 rounded-lg">
+          <h3 class="font-semibold text-sm text-indigo-800 mb-3">Graph Parameters</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">
+                Vertices: <span id="vertexCountValue">6</span>
+              </label>
+              <input type="range" id="vertexCountSlider" min="5" max="8" value="6" step="1" 
+                     class="w-full accent-indigo-600" onchange="updateVertexCount()">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-700 mb-1">
+                Edge Density: <span id="edgeDensityValue">0.5</span>
+              </label>
+              <input type="range" id="edgeDensitySlider" min="0.3" max="0.8" value="0.5" step="0.1" 
+                     class="w-full accent-indigo-600" onchange="updateEdgeDensity()">
+            </div>
+          </div>
+        </div>
+        <div id="graphInfo" class="bg-green-50 p-3 rounded-lg">
+          <h3 class="font-semibold text-sm text-green-800 mb-2">Graph Info</h3>
+          <div class="text-xs space-y-1 text-gray-600">
+            <p>Vertices: <span id="vertexCount">6</span></p>
+            <p>Edges: <span id="edgeCount">0</span></p>
+            <p>Crossings: <span id="crossingCountInfo">0</span></p>
+            <p>Status: <span id="planarStatus">Unknown</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Info Button -->
+    <div class="floating-button secondary" id="infoButton">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+      </svg>
+    </div>
+    
+    <div class="floating-panel" id="infoPanel">
+      <div class="floating-panel-header">
+        <h3 class="panel-title">Planar Graphs</h3>
+        <div class="floating-panel-close" id="infoPanelClose">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </div>
+      </div>
+      <div class="floating-panel-content space-y-4">
+        <div class="bg-blue-50 p-3 rounded-lg">
+          <h3 class="font-semibold text-sm text-blue-800 mb-2">Planar Graphs</h3>
+          <div class="text-xs space-y-1 text-gray-600">
+            <p>• Can be drawn without edge crossings</p>
+            <p>• K₄ is planar (complete graph on 4 vertices)</p>
+            <p>• Cube graph is planar</p>
+            <p>• Drag vertices to find planar layout!</p>
+          </div>
+        </div>
+        <div class="bg-red-50 p-3 rounded-lg">
+          <h3 class="font-semibold text-sm text-red-800 mb-2">Non-Planar Graphs</h3>
+          <div class="text-xs space-y-1 text-gray-600">
+            <p>• Cannot be drawn without crossings</p>
+            <p>• K₅ is non-planar (5 vertices, all connected)</p>
+            <p>• K₃,₃ is non-planar (bipartite, 3+3 vertices)</p>
+            <p>• Kuratowski's theorem applies</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theory Section -->
+    <section class="grid md:grid-cols-3 gap-6">
+      <div class="card bg-white p-4 rounded-xl shadow">
+        <h2 class="text-2xl font-semibold text-green-700 mb-3">Planar Graphs</h2>
+        <div class="space-y-3 text-sm">
+          <p class="text-gray-700">A planar graph can be embedded in the plane with no edge crossings.</p>
+          <div class="bg-green-100 p-3 rounded">
+            <p class="font-medium text-green-800 mb-2">Properties:</p>
+            <ul class="list-disc pl-4 space-y-1 text-gray-700">
+              <li>Can be drawn without edge intersections</li>
+              <li>Euler's formula: V - E + F = 2</li>
+              <li>For simple planar graphs: E ≤ 3V - 6</li>
+              <li>Every face is bounded by at least 3 edges</li>
+            </ul>
+          </div>
+          <div class="bg-gray-100 p-3 rounded">
+            <p class="font-medium text-gray-800">Examples:</p>
+            <p class="text-gray-700">Trees, cycles, wheels, and complete graphs K₁, K₂, K₃, K₄.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card bg-white p-4 rounded-xl shadow">
+        <h2 class="text-2xl font-semibold text-red-700 mb-3">Non-Planar Graphs</h2>
+        <div class="space-y-3 text-sm">
+          <p class="text-gray-700">Non-planar graphs cannot be drawn in the plane without edge crossings.</p>
+          <div class="bg-red-100 p-3 rounded">
+            <p class="font-medium text-red-800 mb-2">Key Examples:</p>
+            <ul class="list-disc pl-4 space-y-1 text-gray-700">
+              <li>K₅: Complete graph on 5 vertices</li>
+              <li>K₃,₃: Complete bipartite graph</li>
+              <li>Any graph containing K₅ or K₃,₃ subdivision</li>
+              <li>Utility graph (3 houses, 3 utilities)</li>
+            </ul>
+          </div>
+          <div class="bg-gray-100 p-3 rounded">
+            <p class="font-medium text-gray-800">Kuratowski's Theorem:</p>
+            <p class="text-gray-700">A graph is non-planar if and only if it contains a subdivision of K₅ or K₃,₃.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-white p-4 rounded-xl shadow">
+        <h2 class="text-2xl font-semibold text-blue-700 mb-3">Testing Planarity</h2>
+        <div class="space-y-3 text-sm">
+          <p class="text-gray-700">Interactive exploration helps build intuition for recognizing planar graphs.</p>
+          <div class="bg-blue-100 p-3 rounded">
+            <p class="font-medium text-blue-800 mb-2">Strategies:</p>
+            <ol class="list-decimal pl-4 space-y-1 text-gray-700">
+              <li>Start with outer face vertices</li>
+              <li>Minimize edge crossings by repositioning</li>
+              <li>Look for forbidden subgraphs</li>
+              <li>Use Euler's formula to check necessity</li>
+            </ol>
+          </div>
+          <div class="bg-gray-100 p-3 rounded">
+            <p class="font-medium text-gray-800">Applications:</p>
+            <p class="text-gray-700">Circuit design, geographic mapping, network layout, and graph drawing algorithms.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="Planar Graphs.js"></script>
 </body>
 </html>
