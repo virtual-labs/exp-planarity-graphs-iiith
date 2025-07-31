@@ -2,38 +2,157 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "Which of the following best describes why K₅ (complete graph with 5 vertices) is non-planar?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "It has too many vertices",
+        "b": "It has 10 edges, which is too many for any planar graph",
+        "c": "It cannot be drawn on a flat surface without edge crossings",
+        "d": "It violates Euler's formula"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
-    },
-    {
-      "question": "This is a Sample Question 2?",
-      "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
-      },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. The number of vertices alone doesn't determine planarity. Many graphs with 5 or more vertices can still be planar (like star graphs or trees).",
+        "b": "Incorrect. Having 10 edges doesn't automatically make a graph non-planar. The planarity depends on how these edges connect the vertices, not just the count.",
+        "c": "Correct! K₅ is non-planar because no matter how you try to arrange its 5 vertices and 10 edges on a flat surface, you will always have at least one pair of edges that must cross. This is the fundamental definition of non-planarity.",
+        "d": "Incorrect. K₅ actually satisfies Euler's formula constraints. If it were planar with V=5, E=10, it would have F=7 faces, which is mathematically consistent. The issue is that it simply cannot be drawn without crossings."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "easy"
+    },
+    {
+      "question": "What is the minimum number of faces in any connected planar graph?",
+      "answers": {
+        "a": "1 face",
+        "b": "2 faces", 
+        "c": "3 faces",
+        "d": "It depends on the number of vertices"
+      },
+      "explanations": {
+        "a": "Incorrect. Even the simplest connected planar graph must have at least 2 faces: any drawing on a plane creates at least one bounded or unbounded region plus the outer infinite region.",
+        "b": "Correct! According to Euler's formula V - E + F = 2, the minimum occurs in a tree structure. For example, a single edge connecting two vertices (V=2, E=1) gives F = 2 - 2 + 1 = 1. But wait, we also need to count the outer face, so F=2. Any connected planar graph has at least the outer unbounded face plus any internal regions.",
+        "c": "Incorrect. A connected planar graph can have exactly 2 faces - for instance, a tree has only the outer face and no internal bounded regions, giving exactly 2 faces when we count properly.",
+        "d": "Incorrect. While the total number of faces does depend on the graph structure, there is a definite minimum of 2 faces for any connected planar graph."
+      },
+      "correctAnswer": "b",
+      "difficulty": "easy"
+    },
+    {
+      "question": "In the context of planar graphs, what does a 'subdivision' of a graph mean?",
+      "answers": {
+        "a": "Dividing the graph into smaller disconnected components",
+        "b": "Adding new vertices along existing edges",
+        "c": "Removing vertices from the graph",
+        "d": "Creating multiple copies of the same graph"
+      },
+      "explanations": {
+        "a": "Incorrect. Subdivision doesn't involve disconnecting the graph or breaking it into separate components.",
+        "b": "Correct! A subdivision of a graph is created by adding new vertices along existing edges. This process doesn't change the fundamental structure or planarity of the graph - if the original was planar, the subdivision remains planar, and if it was non-planar, the subdivision stays non-planar. This concept is crucial in Kuratowski's theorem.",
+        "c": "Incorrect. Subdivision involves adding vertices, not removing them. Removing vertices would be called vertex deletion.",
+        "d": "Incorrect. Creating multiple copies would be replication or duplication, not subdivision."
+      },
+      "correctAnswer": "b",
+      "difficulty": "easy"
+    },
+    {
+      "question": "A connected planar graph has 8 vertices and 12 edges. Using Euler's formula, how many faces does it have, and is this configuration possible?",
+      "answers": {
+        "a": "6 faces, and this is possible",
+        "b": "6 faces, but this is impossible for a planar graph",
+        "c": "4 faces, and this is possible", 
+        "d": "8 faces, but this violates planarity constraints"
+      },
+      "explanations": {
+        "a": "Correct! Using Euler's formula V - E + F = 2: 8 - 12 + F = 2, so F = 6. To check if this is possible for a planar graph, we use the constraint E ≤ 3V - 6 for connected planar graphs with V ≥ 3. Here: 12 ≤ 3(8) - 6 = 18, which is satisfied. Therefore, this configuration is indeed possible.",
+        "b": "Incorrect. While F = 6 is correct from Euler's formula, this configuration doesn't violate planarity constraints. The edge count 12 is well below the maximum of 18 for a planar graph with 8 vertices.",
+        "c": "Incorrect calculation. Using V - E + F = 2: 8 - 12 + F = 2 gives F = 6, not 4.",
+        "d": "Incorrect calculation. The number of faces is 6, not 8, and this doesn't violate planarity constraints."
+      },
+      "correctAnswer": "a",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Which statement about the cube graph (representing a 3D cube's vertices and edges) is correct?",
+      "answers": {
+        "a": "It is non-planar because it represents a 3D object",
+        "b": "It is planar and can be drawn as a square with internal connections",
+        "c": "It has 8 vertices, 12 edges, and violates Euler's formula",
+        "d": "It is non-planar because it contains a subdivision of K₅"
+      },
+      "explanations": {
+        "a": "Incorrect. The fact that a graph represents a 3D object doesn't determine its planarity. The cube graph can actually be drawn on a flat surface without edge crossings.",
+        "b": "Correct! The cube graph has 8 vertices and 12 edges, representing the corners and edges of a 3D cube. Despite representing a 3D structure, it can be drawn planarly. One way is to draw it as an outer square (representing one face of the cube) with an inner square (the opposite face) and connecting corresponding vertices.",
+        "c": "Incorrect. The cube graph does satisfy Euler's formula: V = 8, E = 12, and when drawn planarly, F = 6 (including the outer face). Check: 8 - 12 + 6 = 2 ✓",
+        "d": "Incorrect. The cube graph does not contain K₅ as a subdivision. It's actually a well-known example of a planar graph that can be tricky to visualize but is definitely drawable without crossings."
+      },
+      "correctAnswer": "b",
+      "difficulty": "medium"
+    },
+    {
+      "question": "For a simple connected planar graph (no multiple edges or self-loops), what is the relationship between edges and vertices?",
+      "answers": {
+        "a": "E ≤ V + 4",
+        "b": "E ≤ 2V - 4", 
+        "c": "E ≤ 3V - 6",
+        "d": "E = V - 1"
+      },
+      "explanations": {
+        "a": "Incorrect. This bound is too restrictive and doesn't represent the actual constraint for planar graphs.",
+        "b": "Incorrect. This bound is also too restrictive for general planar graphs, though it might apply to specific subclasses.",
+        "c": "Correct! For simple connected planar graphs with V ≥ 3, the maximum number of edges is bounded by E ≤ 3V - 6. This comes from the fact that each face must be bounded by at least 3 edges, and using Euler's formula along with double-counting arguments. This is a fundamental result in planar graph theory.",
+        "d": "Incorrect. This formula E = V - 1 applies specifically to trees, not to general planar graphs. Planar graphs can have many more edges than trees."
+      },
+      "correctAnswer": "c",
+      "difficulty": "medium"
+    },
+    {
+      "question": "Consider a planar graph where every face (including the outer face) is bounded by exactly 4 edges, and every vertex has degree 3. If the graph has F faces, derive the relationship between vertices V and faces F.",
+      "answers": {
+        "a": "V = 2F",
+        "b": "V = F + 2",
+        "c": "V = 4F/3",
+        "d": "V = 3F/2"
+      },
+      "explanations": {
+        "a": "Incorrect. Let's work through this systematically using the given constraints and Euler's formula.",
+        "b": "Incorrect. This doesn't follow from the degree and face constraints given in the problem.", 
+        "c": "Correct! Here's the derivation: Since every vertex has degree 3, the sum of all degrees is 3V = 2E (handshaking lemma), so E = 3V/2. Since every face is bounded by exactly 4 edges, and each edge borders exactly 2 faces, we have 4F = 2E, so E = 2F. Therefore: 3V/2 = 2F, which gives us V = 4F/3.",
+        "d": "Incorrect. This relationship doesn't satisfy the constraints. If V = 3F/2, then E = 3V/2 = 9F/4, but from face constraints E = 2F, leading to 9F/4 = 2F, which gives 9 = 8, a contradiction."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Using Kuratowski's theorem, which of the following graphs is definitely non-planar?",
+      "answers": {
+        "a": "A graph that contains K₄ as a subgraph",
+        "b": "A graph that contains a cycle of length 5 with all diagonals added",
+        "c": "A graph with 6 vertices where each vertex connects to exactly 4 others",
+        "d": "The Petersen graph (which contains K₃,₃ as a subdivision)"
+      },
+      "explanations": {
+        "a": "Incorrect. K₄ is planar, so containing K₄ as a subgraph doesn't make a graph non-planar. Many planar graphs contain K₄.",
+        "b": "Incorrect. A 5-cycle with all diagonals is actually K₅, which is non-planar, but the way this is stated might be confusing. Let's check the other options first.",
+        "c": "Incorrect. Let's verify: 6 vertices each with degree 4 gives total degree 24, so E = 12. For planarity, we need E ≤ 3V - 6 = 18 - 6 = 12. This exactly meets the bound, so it could potentially be planar (though it would be maximal planar).",
+        "d": "Correct! According to Kuratowski's theorem, a graph is non-planar if and only if it contains a subdivision of K₅ or K₃,₃. The Petersen graph is a famous example that contains K₃,₃ as a subdivision, making it definitively non-planar. This is a classic result in graph theory."
+      },
+      "correctAnswer": "d",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In a maximal planar graph with n vertices (n ≥ 3), every face is a triangle. If such a graph has exactly 20 triangular faces, how many vertices does it have?",
+      "answers": {
+        "a": "10 vertices",
+        "b": "12 vertices", 
+        "c": "14 vertices",
+        "d": "22 vertices"
+      },
+      "explanations": {
+        "a": "Incorrect. Let's work through the calculation systematically.",
+        "b": "Correct! In a maximal planar graph where every face is triangular: each face has 3 edges, and each edge borders exactly 2 faces, so 3F = 2E, giving E = 3F/2. With F = 20: E = 3(20)/2 = 30. Using Euler's formula V - E + F = 2: V - 30 + 20 = 2, so V = 12. We can verify: a maximal planar graph with 12 vertices should have E = 3(12) - 6 = 30 edges ✓",
+        "c": "Incorrect. If V = 14, then E = 3(14) - 6 = 36, and F = 2 + E - V = 2 + 36 - 14 = 24, not 20.",
+        "d": "Incorrect. This number is too large and doesn't fit the constraints of the problem."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
     }
   ]
 }
