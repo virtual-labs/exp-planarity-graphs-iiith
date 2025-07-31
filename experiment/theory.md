@@ -52,21 +52,20 @@ If you can find either of these inside your graph (even if the lines are bent or
 
 Here’s a formula that works for **any connected planar graph**:
 
-$$
-V - E + F = 2
-$$
+
+`V - E + F = 2`
+
 
 Where:
 
-* $V$ = number of vertices (dots)
-* $E$ = number of edges (lines)
-* $F$ = number of faces (regions, including the outer area)
+* V = number of vertices (dots)
+* E = number of edges (lines)
+* F = number of faces (regions, including the outer area)
 
 Try drawing a triangle (3 vertices, 3 edges, 1 face inside + 1 outer = 2 faces):
 
-$$
-3 - 3 + 2 = 2 \quad 
-$$
+`3 - 3 + 2 = 2`
+
 
 Euler’s formula helps us **double-check** if a graph might be planar.
 
