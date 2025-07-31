@@ -1,0 +1,25 @@
+
+/home/runner/work/exp-planarity-graphs-iiith/exp-planarity-graphs-iiith/experiment/simulation/Planar Graphs.js
+   555:19  warning  'event' is defined but never used                 no-unused-vars
+  1107:10  warning  'checkPlanarity' is defined but never used        no-unused-vars
+  1155:10  warning  'showHint' is defined but never used              no-unused-vars
+  1174:10  warning  'showSolution' is defined but never used          no-unused-vars
+  1190:10  warning  'nextSolutionStep' is defined but never used      no-unused-vars
+  1197:10  warning  'previousSolutionStep' is defined but never used  no-unused-vars
+  1204:10  warning  'exitSolutionMode' is defined but never used      no-unused-vars
+  1211:10  warning  'tryAnotherGraph' is defined but never used       no-unused-vars
+  1235:10  warning  'generateNewGraph' is defined but never used      no-unused-vars
+  1254:10  warning  'resetGraph' is defined but never used            no-unused-vars
+  1268:10  warning  'updateVertexCount' is defined but never used     no-unused-vars
+  1285:10  warning  'updateEdgeDensity' is defined but never used     no-unused-vars
+  1302:10  warning  'clearLearningTrace' is defined but never used    no-unused-vars
+  1308:10  warning  'hideSuccessOverlay' is defined but never used    no-unused-vars
+  1315:10  warning  'hideNonPlanarOverlay' is defined but never used  no-unused-vars
+
+/home/runner/work/exp-planarity-graphs-iiith/exp-planarity-graphs-iiith/experiment/simulation/mobile-detection.js
+  393:7   warning  'mobileDetection' is assigned a value but never used  no-unused-vars
+  396:38  warning  'module' is not defined                               no-undef
+  397:3   warning  'module' is not defined                               no-undef
+
+✖ 18 problems (0 errors, 18 warnings)
+
