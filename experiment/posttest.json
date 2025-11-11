@@ -27,12 +27,12 @@
         "d": "It depends on the number of vertices"
       },
       "explanations": {
-        "a": "Incorrect. Even the simplest connected planar graph must have at least 2 faces: any drawing on a plane creates at least one bounded or unbounded region plus the outer infinite region.",
-        "b": "Correct! According to Euler's formula V - E + F = 2, the minimum occurs in a tree structure. For example, a single edge connecting two vertices (V=2, E=1) gives F = 2 - 2 + 1 = 1. But wait, we also need to count the outer face, so F=2. Any connected planar graph has at least the outer unbounded face plus any internal regions.",
-        "c": "Incorrect. A connected planar graph can have exactly 2 faces - for instance, a tree has only the outer face and no internal bounded regions, giving exactly 2 faces when we count properly.",
-        "d": "Incorrect. While the total number of faces does depend on the graph structure, there is a definite minimum of 2 faces for any connected planar graph."
+        "a": "Correct! According to Euler's formula V - E + F = 2, the minimum number of faces occurs in a tree structure. For a connected tree with V vertices and E = V - 1 edges, we get F = 2 - V + (V-1) = 1. This single face is the outer unbounded face that surrounds the entire graph. Any tree divides the plane into exactly 1 face.",
+        "b": "Incorrect. While graphs with cycles have 2 or more faces, the minimum for any connected planar graph is 1. A tree (which is connected and planar) has only the outer unbounded face.",
+        "c": "Incorrect. Three faces would require at least 2 cycles in the graph. The minimum is just 1 face.",
+        "d": "Incorrect. While the total number of faces does vary with graph structure, there is a definite minimum of 1 face for any connected planar graph (achieved by trees)."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "easy"
     },
     {
