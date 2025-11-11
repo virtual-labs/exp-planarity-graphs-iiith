@@ -1,0 +1,4 @@
+- Develop an intuitive understanding of planarity in graphs by visually experimenting with graph drawings.
+- Learn to identify edge crossings and understand how they affect planarity.
+- Explore famous examples of planar and non-planar graphs like K4, K5, and K3,3.
+- Gain the ability to distinguish between planar and non-planar graphs through interactive graph manipulation.
